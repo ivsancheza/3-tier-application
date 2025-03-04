@@ -25,7 +25,7 @@ jobs:
         dotnet-version: '7.0'
 
     - name: Restaurar dependencias
-      run: dotnet restore api/*.sln
+      run: dotnet restore api/Basic3TierAPI/Basic3TierAPI.sln
 
     - name: Construir la aplicación
       run: dotnet build api/*.sln --no-restore --configuration Release
