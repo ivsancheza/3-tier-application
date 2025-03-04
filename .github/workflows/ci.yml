@@ -24,7 +24,7 @@ jobs:
       run: dotnet build api/Basic3TierAPI/Basic3TierAPI.sln --configuration Release
 
     - name: Ejecutar pruebas
-      run: dotnet test Basic3TierAPI/Basic3TierAPI.sln --no-build --verbosity normal
+      run: dotnet test api/Basic3TierAPI/Basic3TierAPI.sln --no-build --verbosity normal
 
   docker-build-push:
     needs: build-test-backend
