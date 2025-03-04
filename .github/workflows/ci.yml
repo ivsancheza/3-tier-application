@@ -25,13 +25,13 @@ jobs:
         dotnet-version: '7.0'
 
     - name: Restaurar dependencias
-      run: dotnet restore
+      run: dotnet restore api/*.sln
 
     - name: Construir la aplicación
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build api/*.sln --no-restore --configuration Release
 
     - name: Ejecutar pruebas
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test api/*.sln --no-build --verbosity normal
 
   docker-build-push:
     needs: build-test-backend
