@@ -23,8 +23,8 @@ jobs:
     - name: Construir la aplicación
       run: dotnet build api/Basic3TierAPI/Basic3TierAPI.sln --configuration Release
 
-    - name: Ejecutar pruebas
-      run: dotnet test api/Basic3TierAPI/Basic3TierAPI.sln --no-build --verbosity normal
+    - name: Ejecutar pruebas API
+      run: dotnet test api/Tests/Basic3TierAPI.Tests/Basic3TierAPI.Tests.csproj --no-build --verbosity normal
 
   docker-build-push:
     needs: build-test-backend
