@@ -11,10 +11,6 @@ on:
 jobs:
   build-test-backend:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: api
-
     steps:
     - name: Checkout código
       uses: actions/checkout@v3
@@ -25,7 +21,7 @@ jobs:
         dotnet-version: '7.0'
 
     - name: Restaurar dependencias
-      run: dotnet restore Basic3TierAPI/Basic3TierAPI.sln
+      run: dotnet restore api/Basic3TierAPI/Basic3TierAPI.sln
 
     - name: Construir la aplicación
       run: dotnet build Basic3TierAPI/Basic3TierAPI.sln --no-restore --configuration Release
