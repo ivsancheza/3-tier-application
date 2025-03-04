@@ -20,8 +20,11 @@ jobs:
       with:
         dotnet-version: '7.0'
 
+    - name: Listar archivos (debug)
+      run: ls -R api
+
     - name: Restaurar dependencias
-      run: dotnet restore api/Basic3TierAPI/Basic3TierAPI.sln
+      run: dotnet restore api/Basic3TierAPI/Basic3TierAPI.csproj
 
     - name: Construir la aplicación
       run: dotnet build Basic3TierAPI/Basic3TierAPI.sln --no-restore --configuration Release
