@@ -25,13 +25,13 @@ jobs:
         dotnet-version: '7.0'
 
     - name: Restaurar dependencias
-      run: dotnet restore api/Basic3TierAPI/Basic3TierAPI.sln
+      run: dotnet restore Basic3TierAPI/Basic3TierAPI.sln
 
     - name: Construir la aplicación
-      run: dotnet build api/*.sln --no-restore --configuration Release
+      run: dotnet build Basic3TierAPI/Basic3TierAPI.sln --no-restore --configuration Release
 
     - name: Ejecutar pruebas
-      run: dotnet test api/*.sln --no-build --verbosity normal
+      run: dotnet test Basic3TierAPI/Basic3TierAPI.sln --no-build --verbosity normal
 
   docker-build-push:
     needs: build-test-backend
