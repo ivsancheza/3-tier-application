@@ -1,0 +1,62 @@
+name: CI Pipeline - Backend & Frontend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+
+    - name: Configurar .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0'
+
+    - name: Restaurar dependencias
+      run: dotnet restore
+
+    - name: Construir la aplicación
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Ejecutar pruebas
+      run: dotnet test --no-build --verbosity normal
+
+  docker-build-push:
+    needs: build-test-backend
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+
+    - name: Iniciar sesión en Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Construir y subir imagen del backend
+      run: |
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:latest -f api/Dockerfile api
+        docker tag ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:latest ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:${{ github.run_number }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:latest
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:${{ github.run_number }}
+
+    - name: Construir y subir imagen del frontend
+      run: |
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:latest -f ui/Dockerfile ui
+        docker tag ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:latest ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:${{ github.run_number }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:latest
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:${{ github.run_number }}
