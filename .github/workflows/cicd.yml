@@ -23,10 +23,11 @@ jobs:
     - name: Ejecutar pruebas API
       run: dotnet test api/Tests/Basic3TierAPI.Tests/Basic3TierAPI.Tests.csproj --verbosity normal
 
-    - name: Configurar SonarQube
-      uses: SonarSource/sonarcloud-github-action@v1
-      with:
-        sonar-token: ${{ secrets.SONARQUBE_TOKEN }}
+    - name: Ejecutar pruebas Infrastructure
+      run: dotnet test api/Tests/Basic3Tier.Infrastructure.Tests/Basic3Tier.Infrastructure.Tests.csproj --verbosity normal
+
+    - name: Ejecutar pruebas Core
+      run: dotnet test api/Tests/Basic3TierAPI.Core.Tests/Basic3Tier.Core.Tests.csproj --verbosity normal
 
     - name: Ejecutar análisis SonarQube
       run: |
