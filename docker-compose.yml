@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    image: ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:latest
+    image: ivsancheza/basic3tier-ui:latest
     ports:
       - "3000:80"
     depends_on:
@@ -11,7 +11,7 @@ services:
       - app-network
 
   backend:
-    image: ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:latest
+    image: ivsancheza/basic3tier-api:latest
     ports:
       - "5001:80"
     environment:
