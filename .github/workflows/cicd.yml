@@ -20,11 +20,19 @@ jobs:
       with:
         dotnet-version: '7.0'
 
-    - name: Construir la aplicación
-      run: dotnet build api/Basic3TierAPI/Basic3TierAPI.sln --configuration Release
-
     - name: Ejecutar pruebas API
-      run: dotnet test api/Tests/Basic3TierAPI.Tests/Basic3TierAPI.Tests.csproj --no-build --verbosity normal
+      run: dotnet test api/Tests/Basic3TierAPI.Tests/Basic3TierAPI.Tests.csproj --verbosity normal
+
+    - name: Configurar SonarQube
+      uses: SonarSource/sonarcloud-github-action@v1
+      with:
+        sonar-token: ${{ secrets.SONARQUBE_TOKEN }}
+
+    - name: Ejecutar análisis SonarQube
+      run: |
+        dotnet sonarscanner begin /k:"ivsancheza-3-tier-app" /d:sonar.host.url="http://${{ secrets.AZURE_VM_IP }}:9000" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
+        dotnet build api/Basic3TierAPI/Basic3TierAPI.sln --configuration Release
+        dotnet sonarscanner end /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
 
   docker-build-push:
     needs: build-test-backend
@@ -73,5 +81,6 @@ jobs:
           docker pull ivsancheza/basic3tier-api:latest
           docker pull ivsancheza/basic3tier-ui:latest
           cd /home/${{ secrets.AZURE_SSH_USERNAME }}
+          docker-compose down -v
           docker-compose up -d
         EOF
