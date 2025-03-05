@@ -67,11 +67,15 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
 
-    - name: Conectar a la VM y ejecutar comandos Docker
+    - name: Copiar docker-compose.yml a la VM
+      run: |
+        scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.AZURE_SSH_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/home/${{ secrets.AZURE_SSH_USERNAME }}/docker-compose.yml
+
+    - name: Conectar a la VM y ejecutar Docker Compose
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_SSH_USERNAME }}@${{ secrets.AZURE_VM_IP }} << 'EOF'
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:latest
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:latest
-          docker run -d --name backend -p 5000:5000 ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:latest
-          docker run -d --name frontend -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:latest
+          cd /home/${{ secrets.AZURE_SSH_USERNAME }}
+          docker-compose up -d
         EOF
