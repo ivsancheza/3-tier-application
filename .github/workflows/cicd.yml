@@ -29,6 +29,11 @@ jobs:
     - name: Ejecutar pruebas Core
       run: dotnet test api/Tests/Basic3Tier.Core.Tests/Basic3Tier.Core.Tests.csproj --verbosity normal
 
+    - name: Instalar SonarScanner para .NET
+      run: |
+        dotnet tool install --global dotnet-sonarscanner
+        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
     - name: Ejecutar análisis SonarQube
       run: |
         dotnet sonarscanner begin /k:"ivsancheza-3-tier-app" /d:sonar.host.url="http://${{ secrets.AZURE_VM_IP }}:9000" /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
